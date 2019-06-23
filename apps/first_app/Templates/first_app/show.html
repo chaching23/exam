@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .header{
+        border-bottom: 5px solid black;    
+    }
+    .header h1{
+        display:inline-block;
+        margin-right:400px;
+
+    }
+    .header a{
+        display:inline-block;
+    }
+    .c {
+        border: 5px solid red;
+        padding:10px;
+        width:300px;
+
+    }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Hello, {{ user.first_name}}  {{user.last_name  }} Read about this trip!</h1>
+        <a href="/success"><button>Dashboard</button></a>
+        <a href="/"><button>Logout</button></a>
+    </div>
+
+        <h3>Destination: {{ show.destination }}</h3>
+
+    <div class='c'>
+        <p>Start Date: {{ show.start_date  }}</p>
+   
+        <p>End Date: {{show.end_date   }}</p>
+        <p>Created On: {{show.created_at   }}</p>
+
+        <p>Updated at: {{ show.updated_at  }}</p>
+    
+        <p>Plan: {{ show.plan  }}</p>
+        <p>Created by: {{ people.first_name  }}</p>
+    </div>
+
+    <br> 
+
+
+<h3>People who joined the trip:</h3>
+    {% for x in users_who_join %}
+    <p>  -{{  x.first_name  }} {{  x.last_name  }}</p>
+    {% endfor %}
+
+</body>
+</html>

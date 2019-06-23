@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+            .header{
+            border-bottom: 5px solid black;    
+        }
+        .header h1{
+            display:inline-block;
+            margin-right:400px;
+    
+        }
+        .header a{
+            display:inline-block;
+        }
+        </style>
+</head>
+<body>
+    <div class="header">
+        <h1> Helllo, {{ user.first_name}}  {{user.last_name  }} Let's edit your trip!!</h1>
+        <a href="/success"><button>Dashboard</button></a>
+        <a href="/"><button>Logout</button></a>
+    </div>
+
+    {% if messages %}
+    <ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+    
+    {% if messages %}
+    {% for message in messages %}
+        <p>{{ message }}</p>
+    {% endfor %}
+    {% endif %}
+
+
+        <form action="/update/{{show.id}}" method="POST">
+            {% csrf_token %}
+    <br>
+        <h3>Destination:</h3>
+        <input name="destination" type="text" value="{{ show.destination }} ">
+     <br>
+        <h3>Start date:</h3>
+        <input name="start_date" type="date" value="{{start}} "> {{start}}
+    <br>
+        <h3>End date:</h3>
+        <input name="end_date" type="datetime" value="{{end}} ">{{end}}
+    <br>
+        <h3>Plan:</h3>
+        <input name="plan" type="text" value="{{ show.plan }}">
+    <br>
+        <br>
+            <button type="submit">Update</button>
+
+        </form>
+        <a href="/show/{{show.id}}/delete"><button>Delete</button></a>
+
+</body>
+</html>

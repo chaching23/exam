@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+    .header{
+        border-bottom: 5px solid black;    
+    }
+    .header h1{
+        display:inline-block;
+        margin-right:400px;
+
+    }
+    .header a{
+        display:inline-block;
+    }
+    .table1 {
+        border: 5px solid red;
+        padding:10px;
+
+    }
+    .table1 td {
+        padding:5px;
+
+    }
+
+    .table2 {
+        border: 5px solid red;
+        padding:10px;
+
+
+    }
+    .table2 td {
+        padding:5px;
+
+
+    }
+
+    </style>
+</head>
+<body>
+     <div class="header">
+        <h1>Success!!!! Welcome, {{ people.first_name}}  {{people.last_name  }}</h1>
+        <a href="/"><button>Logout</button></a>
+        <a href="/display"><button>Create a new trip!</button></a>
+
+    </div>
+
+    <h3>Your Trips:</h3>
+
+    <table class="table1">
+        <tr>
+            <th>Destination</th>
+            <th>Start Date</th> 
+            <th>End date</th>
+            <th>Plan</th>
+            <th>Actions</th>
+
+        </tr>
+        {% for x in user %}
+        <tr>
+            <td><a href="/show/{{x.id}}">{{ x.destination }}</a></td>
+            <td>{{ x.start_date | date:'m-d-Y' }}</td>
+            <td>{{ x.end_date | date:'m-d-Y' }}</td> 
+            <td>{{ x.plan }}</td>  
+            <td><a href="/show/{{x.id}}/edit">Edit</a>|
+            <a href="/show/{{x.id}}/delete">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+        {% for x in join %}
+        <tr>
+            <td><a href="/show/{{x.id}}">{{ x.destination }}</a></td>
+            <td>{{ x.start_date | date:'m-d-Y' }}</td>
+            <td>{{ x.end_date| date:'m-d-Y'  }}</td> 
+            <td>{{ x.plan }}</td>  
+            <td><a href="/show/{{x.id}}/remove">Cancel</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <h3>Other People's Trips:</h3>
+    <table class="table2">
+        <tr>
+            <th>Destination</th>
+            <th>Start Date</th> 
+            <th>End date</th>
+            <th>Plan</th>
+            <th>Actions</th>
+
+        </tr>
+        {% for x in all_trips %}
+        <tr>
+            <td><a href="/show/{{x.id}}">{{ x.destination }}</a></td>
+            <td>{{ x.start_date | date:'m-d-Y' }}</td>
+            <td>{{ x.end_date | date:'m-d-Y' }}</td> 
+            <td>{{ x.plan }}</td>  
+            <td><a href="/join/{{x.id}}/">Join</a>
+               
+            </td>
+        </tr>
+        {% endfor %}
+
+    </table>
+
+</body>
+</html>
