@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from django.db import models
 import bcrypt
 import re
+from datetime import datetime
 
 EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
 
@@ -11,12 +12,14 @@ class manager(models.Manager):
  
     def register_user(self, form):
         hashed = bcrypt.hashpw(form["password"].encode(), bcrypt.gensalt())
-        new_guy = self.create(first_name=form["first_name"], last_name=form["last_name"], email=form["email"], password=hashed)
+        new_guy = self.create(first_name=form["first_name"], last_name=form["last_name"], email=form["email"], password=hashed, date_of_birth=form["date_of_birth"])
         return new_guy.id
 
 
     def validate_registration(self, form):
         errors = []
+        curr_date = str(datetime.now())
+
         if len(form['first_name']) <3:
             errors.append("First name should be at least 2 characters")
 
@@ -35,6 +38,8 @@ class manager(models.Manager):
         if form['password']!= form['cpassword']:
             errors.append("Passwords do not match")
 
+        if (form['date_of_birth'])  > curr_date:
+            errors.append("Time travel is not allowed! Birth date cannot be in the future!")
 
         result = self.filter(email=form["email"])
         if result:
@@ -43,17 +48,13 @@ class manager(models.Manager):
 
     def validate_create(self, form):
         errors = []
-        if len(form['destination']) <4:
-            errors.append("Destination should be at least 3 characters!!")
-
-        # if len(form['start_date']) <8:
-        #     errors.append("Please use MM-DD-YYYY format!!!!!")
         
-        # if len(form['end_date']) < 8:
-        #     errors.append("Please use MM-DD-YYYY format!!!!!")
+        if len(form['quoted_by']) <4:
+            errors.append("Owner should be at least 3 characters!!")
 
-        if len(form['plan']) < 4:
-            errors.append("Your plan must be atleast 3 characters long!!")
+
+        if len(form['message']) < 10:
+            errors.append("Your message must be atleast 10 characters long!!")
         
    
         return errors
@@ -63,7 +64,7 @@ class manager(models.Manager):
 
 
 
-class data(models.Model):
+class users(models.Model):
     first_name = models.CharField(max_length=45)
     last_name = models.CharField(max_length=45)
     email = models.CharField(max_length=45)
@@ -71,18 +72,16 @@ class data(models.Model):
     cpassword = models.CharField(max_length=45)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    date_of_birth = models.DateTimeField()
     objects = manager()
+ 
 
 
+class messages(models.Model):
 
-class trip(models.Model):
-    destination = models.CharField(max_length=45)
-    plan = models.TextField()
-    start_date = models.DateTimeField()
-    end_date = models.DateTimeField()
+    quoted_by  = models.CharField(max_length=45)
+    message = models.CharField(max_length=45)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    objects = manager()
-    created =models.ForeignKey(data, related_name="trips_uploaded")
-    users_who_join = models.ManyToManyField(data,related_name="join_trips")
-
+    users_who_create =models.ForeignKey(users, related_name="users_who_create")
+    users_who_favorite = models.ManyToManyField(users,related_name="users_who_favorite")
+    

@@ -11,100 +11,113 @@
     }
     .header h1{
         display:inline-block;
-        margin-right:400px;
+        margin: 0px 630px 0px 0px;
+        padding:10px;
+        padding:10px;
 
     }
     .header a{
         display:inline-block;
     }
-    .table1 {
-        border: 5px solid red;
+    .header h3{
+        display:inline-block;
+        margin-right:75px;
+
+    }
+
+    .left-side h4{
+        width:400px;
+    }
+
+    form{
+    margin-bottom: 40px;
+    }
+
+    .right-side{
+        display:inline-block;
+        vertical-align: top;
+        margin: 20px 20px 20px 50px;
+        width:400px;
         padding:10px;
 
     }
-    .table1 td {
-        padding:5px;
 
+
+    .right{
+        border: 5px solid red;
+        padding:10px;
     }
-
-    .table2 {
+    .left-side{
+        display:inline-block;
+        margin: 20px 20px 20px 20px;
+        width:400px;
         border: 5px solid red;
         padding:10px;
 
 
     }
-    .table2 td {
-        padding:5px;
-
-
-    }
-
+    
     </style>
 </head>
 <body>
      <div class="header">
-        <h1>Success!!!! Welcome, {{ people.first_name}}  {{people.last_name  }}</h1>
-        <a href="/"><button>Logout</button></a>
-        <a href="/display"><button>Create a new trip!</button></a>
+        <h1>Welcome {{ people.first_name}}</h1>
+        <a href="/logout"><button>Logout</button></a>
 
     </div>
 
-    <h3>Your Trips:</h3>
+    <div class="left-side">
+    {% if messages %}
+    {% for message in messages %}
+        <p>{{ message }}</p>
+    {% endfor %}
+    {% endif %}
+   
 
-    <table class="table1">
-        <tr>
-            <th>Destination</th>
-            <th>Start Date</th> 
-            <th>End date</th>
-            <th>Plan</th>
-            <th>Actions</th>
 
-        </tr>
-        {% for x in user %}
-        <tr>
-            <td><a href="/show/{{x.id}}">{{ x.destination }}</a></td>
-            <td>{{ x.start_date | date:'m-d-Y' }}</td>
-            <td>{{ x.end_date | date:'m-d-Y' }}</td> 
-            <td>{{ x.plan }}</td>  
-            <td><a href="/show/{{x.id}}/edit">Edit</a>|
-            <a href="/show/{{x.id}}/delete">Delete</a>
-            </td>
-        </tr>
-        {% endfor %}
-        {% for x in join %}
-        <tr>
-            <td><a href="/show/{{x.id}}">{{ x.destination }}</a></td>
-            <td>{{ x.start_date | date:'m-d-Y' }}</td>
-            <td>{{ x.end_date| date:'m-d-Y'  }}</td> 
-            <td>{{ x.plan }}</td>  
-            <td><a href="/show/{{x.id}}/remove">Cancel</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
-    <h3>Other People's Trips:</h3>
-    <table class="table2">
-        <tr>
-            <th>Destination</th>
-            <th>Start Date</th> 
-            <th>End date</th>
-            <th>Plan</th>
-            <th>Actions</th>
+    {% for x in all_messages %}
+  
+        <h4> {{ x.quoted_by }}: {{ x.message }}</h4>   
+            <p> Posted by <a href="/show/{{x.users_who_create.id}}">{{x.users_who_create.first_name  }}</a> </p>
+            <a href="/join/{{x.id}}/"><button>Add to my List</button></a>
 
-        </tr>
-        {% for x in all_trips %}
-        <tr>
-            <td><a href="/show/{{x.id}}">{{ x.destination }}</a></td>
-            <td>{{ x.start_date | date:'m-d-Y' }}</td>
-            <td>{{ x.end_date | date:'m-d-Y' }}</td> 
-            <td>{{ x.plan }}</td>  
-            <td><a href="/join/{{x.id}}/">Join</a>
-               
-            </td>
-        </tr>
-        {% endfor %}
+    {% endfor %}
+    
 
-    </table>
+
+    </div>
+
+    <div class="right-side">
+        <div class="right">
+
+            <h2>Your Favorites:</h2>
+            {% for x in add_fav %}
+    
+            <h4> {{ x.quoted_by }}: {{ x.message }}</h4>   
+            <p> Posted by <a href="/show/{{x.users_who_create.id}}">{{x.users_who_create.first_name  }}</a> </p>
+                <a href="/show/{{x.id}}/remove"><button>Remove from my List</button></a>
+
+
+            {% endfor %}
+   
+
+        </div>
+
+
+
+        <form action="/create" method="POST">
+            {% csrf_token %}
+            <h3>Contribute  Quote</h3>
+            <h4>Quoted by: <input name="quoted_by" type="text"></h4>
+            <h4>Post a message:</h4>
+                <textarea name="message" id="" cols="50" rows="5"></textarea>
+        <br>
+        <br>
+            <button type="submit">Submit</button>
+    
+        </form>
+    
+    </div>
 
 </body>
 </html>
